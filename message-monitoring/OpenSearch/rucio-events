@@ -1,0 +1,129 @@
+{
+  "settings" : {
+    "index" : {
+      "routing" : {
+        "allocation" : {
+          "include" : {
+            "_tier_preference" : "data_content"
+          }
+        }
+      },
+      "number_of_shards" : "3",
+      "number_of_replicas" : "1"
+      }
+    },
+  "aliases" : { },
+  "mappings" : {
+    "properties" : {
+      "created_at" : {
+        "type" : "date"
+      },
+      "event_type" : {
+        "type" : "keyword"
+      },
+      "id" : {
+        "type" : "keyword"
+      },
+      "payload" : {
+        "properties" : {
+          "activity" : {
+            "type" : "keyword"
+          },
+          "bytes" : {
+            "type" : "long"
+          },
+          "checksum-adler" : {
+            "type" : "keyword"
+          },
+          "checksum-md5" : {
+            "type" : "keyword"
+          },
+          "created_at" : {
+            "type" : "date"
+          },
+          "dataset" : {
+            "type" : "keyword"
+          },
+          "datasetScope" : {
+            "type" : "keyword"
+          },
+          "dst-rse" : {
+            "type" : "keyword"
+          },
+          "dst-type" : {
+            "type" : "keyword"
+          },
+          "dst-url" : {
+            "type" : "keyword"
+          },
+          "duration" : {
+            "type" : "float"
+          },
+          "file-size" : {
+            "type" : "long"
+          },
+          "name" : {
+            "type" : "keyword"
+          },
+          "previous-request-id" : {
+            "type" : "keyword"
+          },
+          "protocol" : {
+            "type" : "keyword"
+          },
+          "reason" : {
+            "type" : "keyword"
+          },
+          "rse" : {
+            "type" : "keyword"
+          },
+          "request-id" : {
+            "type" : "keyword"
+          },
+          "scope" : {
+            "type" : "keyword"
+          },
+          "src-rse" : {
+            "type" : "keyword"
+          },
+          "src-type" : {
+            "type" : "keyword"
+          },
+          "src-url" : {
+            "type" : "keyword"
+          },
+          "started_at" : {
+            "type" : "date"
+          },
+          "submitted_at" : {
+            "type" : "date"
+          },
+          "tool-id" : {
+            "type" : "keyword"
+          },
+          "transfer-endpoint" : {
+            "type" : "keyword"
+          },
+          "transfer-id" : {
+            "type" : "keyword"
+          },
+          "transfer_link" : {
+            "type" : "keyword"
+          },
+          "transferred_at" : {
+            "type" : "date"
+          },
+          "url" : {
+            "type" : "keyword"
+          },
+          "vo" : {
+            "type" : "keyword"
+          }
+        }
+      },
+      "services" : {
+        "type" : "keyword"
+      }
+    }
+  }
+}
