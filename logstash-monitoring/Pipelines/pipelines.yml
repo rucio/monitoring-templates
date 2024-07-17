@@ -1,0 +1,131 @@
+- pipeline.id: accounts
+  config.string: |
+    input {
+      jdbc {
+        jdbc_connection_string => "${DB_SECRET_CONNECT}"
+        jdbc_user => "${DB_SECRET_USERNAME}"
+        jdbc_password => "${DB_SECRET_PASSWORD}"
+        jdbc_driver_library => "/usr/share/logstash/jars/postgresql.jar"
+        jdbc_driver_class => "org.postgresql.Driver"
+        schedule => "0 * * * *"
+        statement => "SELECT rses.rse, account_usage.account, account_usage.files, account_usage.bytes FROM account_usage INNER JOIN accounts ON account_usage.account=accounts.account INNER JOIN rses ON account_usage.rse_id=rses.id;"
+        last_run_metadata_path => "/tmp/.logstash__last_run"
+      }
+    }
+    output {
+      opensearch {
+          hosts => [ "${ES_SECRET_HOST}" ]
+          action => "index"
+          index => "rucio_accounts-%{yyyy.MM.dd}"
+          user => "${ES_SECRET_USER}"
+          password => "${ES_SECRET_PASSWORD}"
+          ssl => true
+          ssl_certificate_verification => false
+      }
+    }
+- pipeline.id: dids
+  config.string: |
+    input {
+      jdbc {
+        jdbc_connection_string => "${DB_SECRET_CONNECT}"
+        jdbc_user => "${DB_SECRET_USERNAME}"
+        jdbc_password => "${DB_SECRET_PASSWORD}"
+        jdbc_driver_library => "/usr/share/logstash/jars/postgresql.jar"
+        jdbc_driver_class => "org.postgresql.Driver"
+        schedule => "32 23 * * *"
+        statement => "SELECT scope, name, account, did_type, is_open, complete, availability, bytes, length, expired_at, deleted_at, events, guid, project, datatype, updated_at, created_at FROM dids;"
+        last_run_metadata_path => "/tmp/.logstash__last_run"
+      }
+    }
+    output {
+      opensearch {
+          hosts => [ "${ES_SECRET_HOST}" ]
+          action => "index"
+          index => "rucio_dids-%{yyyy.MM.dd}"
+          user => "${ES_SECRET_USER}"
+          password => "${ES_SECRET_PASSWORD}"
+          ssl => true
+          ssl_certificate_verification => false
+      }
+    }
+
+- pipeline.id: distances
+  config.string: |
+    input {
+      jdbc {
+        jdbc_connection_string => "${DB_SECRET_CONNECT}"
+        jdbc_user => "${DB_SECRET_USERNAME}"
+        jdbc_password => "${DB_SECRET_PASSWORD}"
+        jdbc_driver_library => "/usr/share/logstash/jars/postgresql.jar"
+        jdbc_driver_class => "org.postgresql.Driver"
+        schedule => "15 0 1 * *"
+        statement => "SELECT src_rse_id, dest_rse_id, distance  FROM distances;"
+        last_run_metadata_path => "/tmp/.logstash__last_run"
+      }
+    }
+    output {
+      opensearch {
+        hosts => [ "${ES_SECRET_HOST}" ]
+        action => "index"
+        index => "rucio_distances-%{yyyy.MM.dd}"
+        user => "${ES_SECRET_USER}"
+        password => "${ES_SECRET_PASSWORD}"
+        ssl => true
+        ssl_certificate_verification => false
+      }
+    }
+
+- pipeline.id: replicas
+  config.string: |
+    input {
+      jdbc {
+        jdbc_connection_string => "${DB_SECRET_CONNECT}"
+        jdbc_user => "${DB_SECRET_USERNAME}"
+        jdbc_password => "${DB_SECRET_PASSWORD}"
+        jdbc_driver_library => "/usr/share/logstash/jars/postgresql.jar"
+        jdbc_driver_class => "org.postgresql.Driver"
+        schedule => "15 * * * *"
+        statement => "SELECT rses.rse, rses.country_name, rses.longitude, rses.latitude, replicas.scope, replicas.name, replicas.bytes, replicas.accessed_at, replicas.updated_at, replicas.created_at FROM replicas INNER JOIN rses ON  replicas.rse_id=rses.id WHERE replicas.state='A';"
+        last_run_metadata_path => "/tmp/.logstash__last_run"
+      }
+    }
+    output {
+      opensearch {
+        hosts => [ "${ES_SECRET_HOST}" ]
+        action => "index"
+        index => "rucio_replicas-%{yyyy.MM.dd}"
+        user => "${ES_SECRET_USER}"
+        password => "${ES_SECRET_PASSWORD}"
+        ssl => true
+        ssl_certificate_verification => false
+      }
+    }
+- pipeline.id: rses
+  config.string: |
+    input {
+      jdbc {
+        jdbc_connection_string => "${DB_SECRET_CONNECT}"
+        jdbc_user => "${DB_SECRET_USERNAME}"
+        jdbc_password => "${DB_SECRET_PASSWORD}"
+        jdbc_driver_library => "/usr/share/logstash/jars/postgresql.jar"
+        jdbc_driver_class => "org.postgresql.Driver"
+        schedule => "25 * * * *"
+        statement => "SELECT rses.rse, rses.country_name, rses.latitude, rses.longitude,rse_usage.source, rse_usage.used, rse_usage.free, rse_usage.files FROM rse_usage INNER JOIN rses ON rse_usage.rse_id=rses.id;"
+        last_run_metadata_path => "/tmp/.logstash__last_run"
+      }
+    }
+    output {
+      opensearch {
+        hosts => [ "${ES_SECRET_HOST}" ]
+        action => "index"
+        index => "rucio_rses-%{yyyy.MM.dd}"
+        user => "${ES_SECRET_USER}"
+        password => "${ES_SECRET_PASSWORD}"
+        ssl => true
+        ssl_certificate_verification => false
+      }
+    }
+
+
+
+

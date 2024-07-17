@@ -1,0 +1,8 @@
+namespace: elastic-system
+
+resources:
+- helm-logstash.yaml
+
+patchesStrategicMerge: []
+
+secretGenerator: []
