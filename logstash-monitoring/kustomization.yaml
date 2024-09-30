@@ -5,4 +5,8 @@ resources:
 
 patchesStrategicMerge: []
 
-secretGenerator: []
+secretGenerator:
+- name: rucio-pipelines
+  files:
+  - pipelines/pipelines.yml
+

@@ -1,10 +1,9 @@
+# Accounts run once an hour 
 - pipeline.id: accounts
   config.string: |
     input {
       jdbc {
         jdbc_connection_string => "${DB_SECRET_CONNECT}"
-        jdbc_user => "${DB_SECRET_USERNAME}"
-        jdbc_password => "${DB_SECRET_PASSWORD}"
         jdbc_driver_library => "/usr/share/logstash/jars/postgresql.jar"
         jdbc_driver_class => "org.postgresql.Driver"
         schedule => "0 * * * *"
@@ -14,22 +13,22 @@
     }
     output {
       opensearch {
-          hosts => [ "${ES_SECRET_HOST}" ]
+          hosts => [ "https://usdf-opensearch.slac.stanford.edu/" ]
           action => "index"
-          index => "rucio_accounts-%{yyyy.MM.dd}"
+          index => "rucio_accounts"
           user => "${ES_SECRET_USER}"
           password => "${ES_SECRET_PASSWORD}"
           ssl => true
           ssl_certificate_verification => false
       }
     }
+
+# Dids run once a day just after midnight as this is a large query - and draws down a lot of data
 - pipeline.id: dids
   config.string: |
     input {
       jdbc {
         jdbc_connection_string => "${DB_SECRET_CONNECT}"
-        jdbc_user => "${DB_SECRET_USERNAME}"
-        jdbc_password => "${DB_SECRET_PASSWORD}"
         jdbc_driver_library => "/usr/share/logstash/jars/postgresql.jar"
         jdbc_driver_class => "org.postgresql.Driver"
         schedule => "32 23 * * *"
@@ -39,9 +38,9 @@
     }
     output {
       opensearch {
-          hosts => [ "${ES_SECRET_HOST}" ]
+          hosts => [ "https://usdf-opensearch.slac.stanford.edu/" ]
           action => "index"
-          index => "rucio_dids-%{yyyy.MM.dd}"
+          index => "rucio_dids"
           user => "${ES_SECRET_USER}"
           password => "${ES_SECRET_PASSWORD}"
           ssl => true
@@ -49,13 +48,12 @@
       }
     }
 
+# Distances are something that does not change very often so run once a month
 - pipeline.id: distances
   config.string: |
     input {
       jdbc {
         jdbc_connection_string => "${DB_SECRET_CONNECT}"
-        jdbc_user => "${DB_SECRET_USERNAME}"
-        jdbc_password => "${DB_SECRET_PASSWORD}"
         jdbc_driver_library => "/usr/share/logstash/jars/postgresql.jar"
         jdbc_driver_class => "org.postgresql.Driver"
         schedule => "15 0 1 * *"
@@ -65,9 +63,9 @@
     }
     output {
       opensearch {
-        hosts => [ "${ES_SECRET_HOST}" ]
+        hosts => [ "https://usdf-opensearch.slac.stanford.edu/" ]
         action => "index"
-        index => "rucio_distances-%{yyyy.MM.dd}"
+        index => "rucio_distances"
         user => "${ES_SECRET_USER}"
         password => "${ES_SECRET_PASSWORD}"
         ssl => true
@@ -75,13 +73,12 @@
       }
     }
 
+# Replicas run once an hour
 - pipeline.id: replicas
   config.string: |
     input {
       jdbc {
         jdbc_connection_string => "${DB_SECRET_CONNECT}"
-        jdbc_user => "${DB_SECRET_USERNAME}"
-        jdbc_password => "${DB_SECRET_PASSWORD}"
         jdbc_driver_library => "/usr/share/logstash/jars/postgresql.jar"
         jdbc_driver_class => "org.postgresql.Driver"
         schedule => "15 * * * *"
@@ -91,22 +88,22 @@
     }
     output {
       opensearch {
-        hosts => [ "${ES_SECRET_HOST}" ]
+        hosts => [ "https://usdf-opensearch.slac.stanford.edu/" ]
         action => "index"
-        index => "rucio_replicas-%{yyyy.MM.dd}"
+        index => "rucio_replicas"
         user => "${ES_SECRET_USER}"
         password => "${ES_SECRET_PASSWORD}"
         ssl => true
         ssl_certificate_verification => false
       }
     }
+
+# Rses run once a hour
 - pipeline.id: rses
   config.string: |
     input {
       jdbc {
         jdbc_connection_string => "${DB_SECRET_CONNECT}"
-        jdbc_user => "${DB_SECRET_USERNAME}"
-        jdbc_password => "${DB_SECRET_PASSWORD}"
         jdbc_driver_library => "/usr/share/logstash/jars/postgresql.jar"
         jdbc_driver_class => "org.postgresql.Driver"
         schedule => "25 * * * *"
@@ -116,9 +113,9 @@
     }
     output {
       opensearch {
-        hosts => [ "${ES_SECRET_HOST}" ]
+        hosts => [ "https://usdf-opensearch.slac.stanford.edu/" ]
         action => "index"
-        index => "rucio_rses-%{yyyy.MM.dd}"
+        index => "rucio_rses"
         user => "${ES_SECRET_USER}"
         password => "${ES_SECRET_PASSWORD}"
         ssl => true

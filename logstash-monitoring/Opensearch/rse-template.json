@@ -1,0 +1,22 @@
+{
+  "properties": {
+    "@timestamp": {
+      "type": "date"
+    },
+    "@version": {
+      "type": "text"
+    },
+    "files": {
+      "type": "long"
+    },
+    "rse": {
+      "type": "keyword"
+    },
+    "source": {
+      "type": "keyword"
+    },
+    "used": {
+      "type": "long"
+    }
+  }
+}
