@@ -1,0 +1,19 @@
+{
+    "properties": {
+      "@timestamp": {
+        "type": "date"
+      },
+      "@version": {
+        "type": "text"
+      },
+      "dest_rse_id": {
+        "type": "keyword"
+      },
+      "distance": {
+        "type": "long"
+      },
+      "src_rse_id": {
+        "type": "keyword"
+      }
+    }
+  }

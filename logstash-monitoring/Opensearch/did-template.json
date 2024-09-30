@@ -1,0 +1,46 @@
+{
+    "properties": {
+      "@timestamp": {
+        "type": "date"
+      },
+      "@version": {
+        "type": "text"
+      },
+      "account": {
+        "type": "keyword"
+      },
+      "availability": {
+        "type": "keyword"
+      },
+      "bytes": {
+        "type": "long"
+      },
+      "created_at": {
+        "type": "date"
+      },
+      "did_type": {
+        "type": "keyword"
+      },
+      "expired_at": {
+        "type": "date"
+      },
+      "guid": {
+        "type": "text"
+      },
+      "is_open": {
+        "type": "boolean"
+      },
+      "name": {
+        "type": "text"
+      },
+      "project": {
+        "type": "keyword"
+      },
+      "scope": {
+        "type": "keyword"
+      },
+      "updated_at": {
+        "type": "date"
+      }
+    }
+  }

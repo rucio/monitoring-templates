@@ -1,0 +1,28 @@
+{
+    "properties": {
+      "@timestamp": {
+        "type": "date"
+      },
+      "@version": {
+        "type": "text"
+      },
+      "bytes": {
+        "type": "long"
+      },
+      "created_at": {
+        "type": "date"
+      },
+      "name": {
+        "type": "text"
+      },
+      "rse": {
+        "type": "keyword"
+      },
+      "scope": {
+        "type": "keyword"
+      },
+      "updated_at": {
+        "type": "date"
+      }
+    }
+  }
