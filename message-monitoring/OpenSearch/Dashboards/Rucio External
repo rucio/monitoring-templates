@@ -24,7 +24,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 40,
+  "id": 41,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -43,8 +43,8 @@
     },
     {
       "datasource": {
-        "type": "elasticsearch",
-        "uid": "a38a46b4-a6aa-48ae-98e2-ed05c966be25"
+        "type": "grafana-opensearch-datasource",
+        "uid": "RUCIO_EVENTS_UID"
       },
       "fieldConfig": {
         "defaults": {
@@ -52,96 +52,88 @@
             "mode": "palette-classic"
           },
           "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineStyle": {
-              "fill": "solid"
-            },
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "always",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
             }
           },
           "mappings": [],
           "max": 100,
-          "thresholds": {
-            "mode": "percentage",
-            "steps": [
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Count"
+            },
+            "properties": [
               {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-red",
+                  "mode": "fixed"
+                }
               }
             ]
           },
-          "unit": "percent"
-        },
-        "overrides": []
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Failure"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
-        "h": 10,
+        "h": 8,
         "w": 12,
         "x": 0,
         "y": 1
       },
       "id": 24,
       "options": {
+        "displayLabels": [
+          "percent"
+        ],
         "legend": {
-          "calcs": [],
-          "displayMode": "table",
-          "placement": "right",
+          "displayMode": "list",
+          "placement": "bottom",
           "showLegend": true
         },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "multi",
           "sort": "none"
         }
       },
       "targets": [
         {
-          "alias": "",
+          "alias": "Success",
           "bucketAggs": [
-            {
-              "field": "$group_by",
-              "id": "2",
-              "settings": {
-                "min_doc_count": "1",
-                "order": "desc",
-                "orderBy": "_term",
-                "size": "0"
-              },
-              "type": "terms"
-            },
             {
               "field": "created_at",
               "id": "3",
               "settings": {
-                "interval": "$bin",
+                "interval": "1d",
                 "min_doc_count": "0",
                 "timeZone": "utc",
                 "trimEdges": "0"
@@ -150,82 +142,59 @@
             }
           ],
           "datasource": {
-            "type": "elasticsearch",
-            "uid": "a38a46b4-a6aa-48ae-98e2-ed05c966be25"
+            "type": "OpenSearch",
+            "uid": "RUCIO_EVENTS_UID"
           },
-          "hide": true,
-          "metrics": [
-            {
-              "id": "1",
-              "type": "count"
-            }
-          ],
-          "query": "payload.vo:${vo:lucene} AND event_type:transfer-done AND payload.dst-rse:${dst_rse:lucene} AND payload.src-rse:${src_rse:lucene} AND payload.protocol:${protocol:lucene} and payload.transfer-endpoint:${fts:lucene}",
-          "refId": "A",
-          "timeField": "created_at"
-        },
-        {
-          "alias": "",
-          "bucketAggs": [
-            {
-              "field": "$group_by",
-              "id": "2",
-              "settings": {
-                "min_doc_count": "1",
-                "order": "desc",
-                "orderBy": "_term",
-                "size": "0"
-              },
-              "type": "terms"
-            },
-            {
-              "field": "created_at",
-              "id": "3",
-              "settings": {
-                "interval": "$bin",
-                "min_doc_count": "0",
-                "timeZone": "utc",
-                "trimEdges": "0"
-              },
-              "type": "date_histogram"
-            }
-          ],
-          "datasource": {
-            "type": "elasticsearch",
-            "uid": "a38a46b4-a6aa-48ae-98e2-ed05c966be25"
-          },
-          "hide": true,
-          "metrics": [
-            {
-              "id": "1",
-              "type": "count"
-            }
-          ],
-          "query": "payload.vo:${vo:lucene} AND event_type:transfer-failed AND payload.dst-rse:${dst_rse:lucene} AND payload.src-rse:${src_rse:lucene} AND payload.protocol:${protocol:lucene} and payload.transfer-endpoint:${fts:lucene}",
-          "refId": "B",
-          "timeField": "created_at"
-        },
-        {
-          "datasource": {
-            "name": "Expression",
-            "type": "__expr__",
-            "uid": "__expr__"
-          },
-          "expression": "($A / ($B + $A)) * 100",
           "hide": false,
-          "refId": "‎",
-          "type": "math"
+          "metrics": [
+            {
+              "id": "1",
+              "type": "count"
+            }
+          ],
+          "query": "event_type:transfer-done AND payload.vo:${vo:lucene} AND payload.dst-rse:${dst_rse:lucene} AND payload.src-rse:${src_rse:lucene} AND payload.protocol:${protocol:lucene} AND payload.transfer-endpoint:${fts:lucene}",
+          "refId": "transfers-done",
+          "timeField": "created_at"
+        },
+        {
+          "alias": "Failure",
+          "bucketAggs": [
+            {
+              "field": "created_at",
+              "id": "3",
+              "settings": {
+                "interval": "1d",
+                "min_doc_count": "0",
+                "timeZone": "utc",
+                "trimEdges": "0"
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "datasource": {
+            "type": "OpenSearch",
+            "uid": "RUCIO_EVENTS_UID"
+          },
+          "hide": false,
+          "metrics": [
+            {
+              "id": "1",
+              "type": "count"
+            }
+          ],
+          "query": "event_type:transfer-failed AND payload.vo:${vo:lucene} AND payload.dst-rse:${dst_rse:lucene} AND payload.src-rse:${src_rse:lucene} AND payload.protocol:${protocol:lucene} AND payload.transfer-endpoint:${fts:lucene}",
+          "refId": "transfers-total",
+          "timeField": "created_at"
         }
       ],
       "title": "Efficiency",
-      "transformations": [],
       "transparent": true,
-      "type": "timeseries"
+      "type": "piechart"
     },
     {
       "datasource": {
-        "type": "elasticsearch",
-        "uid": "a38a46b4-a6aa-48ae-98e2-ed05c966be25"
+        "type": "grafana-opensearch-datasource",
+        "uid": "RUCIO_EVENTS_UID"
       },
       "fieldConfig": {
         "defaults": {
@@ -281,7 +250,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 10,
+        "h": 8,
         "w": 12,
         "x": 12,
         "y": 1
@@ -300,6 +269,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "multi",
           "sort": "none"
         }
@@ -329,10 +299,10 @@
             }
           ],
           "datasource": {
-            "type": "elasticsearch",
-            "uid": "a38a46b4-a6aa-48ae-98e2-ed05c966be25"
+            "type": "OpenSearch",
+            "uid": "RUCIO_EVENTS_UID"
           },
-          "hide": true,
+          "hide": false,
           "metrics": [
             {
               "field": "payload.bytes",
@@ -341,7 +311,7 @@
             }
           ],
           "query": "payload.vo:${vo:lucene} AND event_type:transfer-done AND payload.dst-rse:${dst_rse:lucene} AND payload.src-rse:${src_rse:lucene} AND payload.protocol:${protocol:lucene} and payload.transfer-endpoint:${fts:lucene}",
-          "refId": "A",
+          "refId": "bytes",
           "timeField": "created_at"
         },
         {
@@ -368,8 +338,8 @@
             }
           ],
           "datasource": {
-            "type": "elasticsearch",
-            "uid": "a38a46b4-a6aa-48ae-98e2-ed05c966be25"
+            "type": "OpenSearch",
+            "uid": "RUCIO_EVENTS_UID"
           },
           "hide": true,
           "metrics": [
@@ -380,7 +350,7 @@
             }
           ],
           "query": "payload.vo:${vo:lucene} AND event_type:transfer-done AND payload.dst-rse:${dst_rse:lucene} AND payload.src-rse:${src_rse:lucene} AND payload.protocol:${protocol:lucene} and payload.transfer-endpoint:${fts:lucene}",
-          "refId": "B",
+          "refId": "duration",
           "timeField": "created_at"
         },
         {
@@ -389,7 +359,7 @@
             "type": "__expr__",
             "uid": "__expr__"
           },
-          "expression": "$A / $B",
+          "expression": "[bytes] / [duration]",
           "hide": false,
           "refId": "‎ ",
           "type": "math"
@@ -407,8 +377,8 @@
     },
     {
       "datasource": {
-        "type": "elasticsearch",
-        "uid": "a38a46b4-a6aa-48ae-98e2-ed05c966be25"
+        "type": "grafana-opensearch-datasource",
+        "uid": "RUCIO_EVENTS_UID"
       },
       "fieldConfig": {
         "defaults": {
@@ -470,7 +440,7 @@
         "h": 8,
         "w": 6,
         "x": 0,
-        "y": 11
+        "y": 9
       },
       "id": 25,
       "options": {
@@ -481,6 +451,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "multi",
           "sort": "none"
         }
@@ -496,7 +467,7 @@
                 "min_doc_count": "1",
                 "order": "desc",
                 "orderBy": "_term",
-                "size": "10"
+                "size": "0"
               },
               "type": "terms"
             },
@@ -513,8 +484,8 @@
             }
           ],
           "datasource": {
-            "type": "elasticsearch",
-            "uid": "a38a46b4-a6aa-48ae-98e2-ed05c966be25"
+            "type": "OpenSearch",
+            "uid": "RUCIO_EVENTS_UID"
           },
           "metrics": [
             {
@@ -522,7 +493,7 @@
               "type": "count"
             }
           ],
-          "query": "payload.vo:${vo:lucene} AND event_type:transfer-done AND payload.dst-rse:${dst_rse:lucene} AND payload.src-rse:${src_rse:lucene} AND payload.protocol:${protocol:lucene} and payload.transfer-endpoint:${fts:lucene}",
+          "query": "event_type:transfer-done AND payload.vo:${vo:lucene} AND payload.dst-rse:${dst_rse:lucene} AND payload.src-rse:${src_rse:lucene} AND payload.protocol:${protocol:lucene} AND payload.transfer-endpoint:${fts:lucene}",
           "refId": "A",
           "timeField": "created_at"
         }
@@ -533,8 +504,8 @@
     },
     {
       "datasource": {
-        "type": "elasticsearch",
-        "uid": "a38a46b4-a6aa-48ae-98e2-ed05c966be25"
+        "type": "grafana-opensearch-datasource",
+        "uid": "RUCIO_EVENTS_UID"
       },
       "fieldConfig": {
         "defaults": {
@@ -590,13 +561,29 @@
           },
           "unit": "short"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "transfer-failed"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
         "w": 6,
         "x": 6,
-        "y": 11
+        "y": 9
       },
       "id": 26,
       "options": {
@@ -607,6 +594,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "multi",
           "sort": "none"
         }
@@ -622,7 +610,7 @@
                 "min_doc_count": "1",
                 "order": "desc",
                 "orderBy": "_term",
-                "size": "10"
+                "size": "0"
               },
               "type": "terms"
             },
@@ -639,8 +627,8 @@
             }
           ],
           "datasource": {
-            "type": "elasticsearch",
-            "uid": "a38a46b4-a6aa-48ae-98e2-ed05c966be25"
+            "type": "OpenSearch",
+            "uid": "RUCIO_EVENTS_UID"
           },
           "metrics": [
             {
@@ -648,7 +636,7 @@
               "type": "count"
             }
           ],
-          "query": "payload.vo:${vo:lucene} AND event_type:transfer-failed AND payload.dst-rse:${dst_rse:lucene} AND payload.src-rse:${src_rse:lucene} AND payload.protocol:${protocol:lucene} and payload.transfer-endpoint:${fts:lucene}",
+          "query": "event_type:transfer-failed AND payload.vo:${vo:lucene} AND payload.dst-rse:${dst_rse:lucene} AND payload.src-rse:${src_rse:lucene} AND payload.protocol:${protocol:lucene} AND payload.transfer-endpoint:${fts:lucene}",
           "refId": "A",
           "timeField": "created_at"
         }
@@ -659,8 +647,8 @@
     },
     {
       "datasource": {
-        "type": "elasticsearch",
-        "uid": "a38a46b4-a6aa-48ae-98e2-ed05c966be25"
+        "type": "grafana-opensearch-datasource",
+        "uid": "RUCIO_EVENTS_UID"
       },
       "fieldConfig": {
         "defaults": {
@@ -722,7 +710,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 11
+        "y": 9
       },
       "id": 2,
       "options": {
@@ -737,6 +725,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "multi",
           "sort": "none"
         }
@@ -769,8 +758,8 @@
             }
           ],
           "datasource": {
-            "type": "elasticsearch",
-            "uid": "a38a46b4-a6aa-48ae-98e2-ed05c966be25"
+            "type": "OpenSearch",
+            "uid": "RUCIO_EVENTS_UID"
           },
           "metrics": [
             {
@@ -779,7 +768,7 @@
               "type": "sum"
             }
           ],
-          "query": "payload.vo:${vo:lucene} AND event_type:transfer-done AND payload.dst-rse:${dst_rse:lucene} AND payload.src-rse:${src_rse:lucene} AND payload.protocol:${protocol:lucene} and payload.transfer-endpoint:${fts:lucene}",
+          "query": "event_type:transfer-done AND payload.vo:${vo:lucene} AND payload.dst-rse:${dst_rse:lucene} AND payload.src-rse:${src_rse:lucene} AND payload.protocol:${protocol:lucene} AND payload.transfer-endpoint:${fts:lucene}",
           "refId": "A",
           "timeField": "created_at"
         }
@@ -794,7 +783,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 19
+        "y": 17
       },
       "id": 29,
       "panels": [],
@@ -803,8 +792,8 @@
     },
     {
       "datasource": {
-        "type": "elasticsearch",
-        "uid": "a38a46b4-a6aa-48ae-98e2-ed05c966be25"
+        "type": "grafana-opensearch-datasource",
+        "uid": "RUCIO_EVENTS_UID"
       },
       "description": "Grouped by payload.rse as this is different for deletions and transfers",
       "fieldConfig": {
@@ -813,6 +802,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -826,6 +816,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineStyle": {
               "fill": "solid"
@@ -839,7 +830,7 @@
             "spanNulls": false,
             "stacking": {
               "group": "A",
-              "mode": "none"
+              "mode": "normal"
             },
             "thresholdsStyle": {
               "mode": "off"
@@ -850,8 +841,7 @@
             "mode": "percentage",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -867,7 +857,7 @@
         "h": 10,
         "w": 12,
         "x": 0,
-        "y": 20
+        "y": 18
       },
       "id": 27,
       "options": {
@@ -878,6 +868,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "multi",
           "sort": "none"
         }
@@ -911,8 +902,8 @@
             }
           ],
           "datasource": {
-            "type": "elasticsearch",
-            "uid": "a38a46b4-a6aa-48ae-98e2-ed05c966be25"
+            "type": "OpenSearch",
+            "uid": "RUCIO_EVENTS_UID"
           },
           "hide": false,
           "metrics": [
@@ -921,20 +912,19 @@
               "type": "count"
             }
           ],
-          "query": "payload.vo:${vo:lucene} AND event_type:deletion-done AND payload.rse:${del_rse:lucene} AND payload.protocol:${protocol:lucene} \n\n\n",
+          "query": "event_type:deletion-done AND payload.vo:${vo:lucene} AND payload.rse:${del_rse:lucene} AND payload.protocol:${protocol:lucene}",
           "refId": "A",
           "timeField": "created_at"
         }
       ],
       "title": "Deletions",
-      "transformations": [],
       "transparent": true,
       "type": "timeseries"
     },
     {
       "datasource": {
-        "type": "elasticsearch",
-        "uid": "a38a46b4-a6aa-48ae-98e2-ed05c966be25"
+        "type": "grafana-opensearch-datasource",
+        "uid": "RUCIO_EVENTS_UID"
       },
       "description": "Grouped by payload.rse as this is different for deletions and transfers",
       "fieldConfig": {
@@ -943,6 +933,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -956,6 +947,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineStyle": {
               "fill": "solid"
@@ -980,8 +972,7 @@
             "mode": "percentage",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -997,7 +988,7 @@
         "h": 10,
         "w": 12,
         "x": 12,
-        "y": 20
+        "y": 18
       },
       "id": 30,
       "options": {
@@ -1008,6 +999,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "multi",
           "sort": "none"
         }
@@ -1041,8 +1033,8 @@
             }
           ],
           "datasource": {
-            "type": "elasticsearch",
-            "uid": "a38a46b4-a6aa-48ae-98e2-ed05c966be25"
+            "type": "OpenSearch",
+            "uid": "RUCIO_EVENTS_UID"
           },
           "hide": true,
           "metrics": [
@@ -1052,7 +1044,7 @@
               "type": "sum"
             }
           ],
-          "query": "payload.vo:${vo:lucene} AND event_type:deletion-done AND payload.rse:${del_rse:lucene} AND payload.protocol:${protocol:lucene} \n\n\n",
+          "query": "event_type:deletion-done",
           "refId": "A",
           "timeField": "created_at"
         },
@@ -1083,8 +1075,8 @@
             }
           ],
           "datasource": {
-            "type": "elasticsearch",
-            "uid": "a38a46b4-a6aa-48ae-98e2-ed05c966be25"
+            "type": "OpenSearch",
+            "uid": "RUCIO_EVENTS_UID"
           },
           "hide": true,
           "metrics": [
@@ -1094,7 +1086,7 @@
               "type": "sum"
             }
           ],
-          "query": "payload.vo:${vo:lucene} AND event_type:deletion-done AND payload.rse:${del_rse:lucene} AND payload.protocol:${protocol:lucene} \n\n\n",
+          "query": "event_type:deletion-done\n\n",
           "refId": "B",
           "timeField": "created_at"
         },
@@ -1111,7 +1103,6 @@
         }
       ],
       "title": "Deletions Rate",
-      "transformations": [],
       "transparent": true,
       "type": "timeseries"
     },
@@ -1121,7 +1112,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 30
+        "y": 28
       },
       "id": 18,
       "panels": [],
@@ -1130,8 +1121,8 @@
     },
     {
       "datasource": {
-        "type": "elasticsearch",
-        "uid": "a38a46b4-a6aa-48ae-98e2-ed05c966be25"
+        "type": "grafana-opensearch-datasource",
+        "uid": "RUCIO_EVENTS_UID"
       },
       "fieldConfig": {
         "defaults": {
@@ -1140,7 +1131,9 @@
           },
           "custom": {
             "align": "auto",
-            "displayMode": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
             "filterable": false,
             "inspect": true
           },
@@ -1193,11 +1186,13 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 31
+        "y": 29
       },
       "id": 21,
       "options": {
+        "cellHeight": "sm",
         "footer": {
+          "countRows": false,
           "enablePagination": false,
           "fields": [],
           "reducer": [
@@ -1213,13 +1208,13 @@
           }
         ]
       },
-      "pluginVersion": "9.1.5",
+      "pluginVersion": "11.0.0",
       "targets": [
         {
           "alias": "",
           "bucketAggs": [
             {
-              "field": "payload.reason",
+              "field": "payload.reason.keyword",
               "id": "2",
               "settings": {
                 "min_doc_count": "1",
@@ -1231,8 +1226,8 @@
             }
           ],
           "datasource": {
-            "type": "elasticsearch",
-            "uid": "a38a46b4-a6aa-48ae-98e2-ed05c966be25"
+            "type": "OpenSearch",
+            "uid": "RUCIO_EVENTS_UID"
           },
           "metrics": [
             {
@@ -1251,8 +1246,8 @@
     },
     {
       "datasource": {
-        "type": "elasticsearch",
-        "uid": "a38a46b4-a6aa-48ae-98e2-ed05c966be25"
+        "type": "grafana-opensearch-datasource",
+        "uid": "RUCIO_EVENTS_UID"
       },
       "fieldConfig": {
         "defaults": {
@@ -1261,7 +1256,9 @@
           },
           "custom": {
             "align": "auto",
-            "displayMode": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
             "inspect": false
           },
           "mappings": [],
@@ -1591,11 +1588,13 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 38
+        "y": 36
       },
       "id": 14,
       "options": {
+        "cellHeight": "sm",
         "footer": {
+          "countRows": false,
           "fields": "",
           "reducer": [
             "sum"
@@ -1610,14 +1609,14 @@
           }
         ]
       },
-      "pluginVersion": "9.1.5",
+      "pluginVersion": "11.0.0",
       "targets": [
         {
           "alias": "",
           "bucketAggs": [],
           "datasource": {
-            "type": "elasticsearch",
-            "uid": "a38a46b4-a6aa-48ae-98e2-ed05c966be25"
+            "type": "OpenSearch",
+            "uid": "RUCIO_EVENTS_UID"
           },
           "metrics": [
             {
@@ -1628,7 +1627,7 @@
               "type": "logs"
             }
           ],
-          "query": "payload.vo:${vo:lucene} AND payload.dst-rse:${dst_rse:lucene} AND payload.src-rse:${src_rse:lucene} AND payload.protocol:${protocol:lucene} and payload.transfer-endpoint:${fts:lucene} AND event_type:transfer-failed",
+          "query": "event_type:transfer-failed AND payload.vo:${vo:lucene} AND payload.dst-rse:${dst_rse:lucene} AND payload.src-rse:${src_rse:lucene} AND payload.protocol:${protocol:lucene} AND payload.transfer-endpoint:${fts:lucene}",
           "refId": "A",
           "timeField": "created_at"
         }
@@ -1724,8 +1723,8 @@
     },
     {
       "datasource": {
-        "type": "elasticsearch",
-        "uid": "a38a46b4-a6aa-48ae-98e2-ed05c966be25"
+        "type": "OpenSearch",
+        "uid": "RUCIO_EVENTS_UID"
       },
       "fieldConfig": {
         "defaults": {
@@ -1734,7 +1733,9 @@
           },
           "custom": {
             "align": "auto",
-            "displayMode": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
             "inspect": false
           },
           "mappings": [],
@@ -2054,11 +2055,13 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 46
+        "y": 44
       },
       "id": 19,
       "options": {
+        "cellHeight": "sm",
         "footer": {
+          "countRows": false,
           "fields": "",
           "reducer": [
             "sum"
@@ -2068,14 +2071,14 @@
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "9.1.5",
+      "pluginVersion": "11.0.0",
       "targets": [
         {
           "alias": "",
           "bucketAggs": [],
           "datasource": {
-            "type": "elasticsearch",
-            "uid": "a38a46b4-a6aa-48ae-98e2-ed05c966be25"
+            "type": "OpenSearch",
+            "uid": "RUCIO_EVENTS_UID"
           },
           "metrics": [
             {
@@ -2139,7 +2142,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 54
+        "y": 52
       },
       "id": 9,
       "panels": [],
@@ -2148,8 +2151,8 @@
     },
     {
       "datasource": {
-        "type": "elasticsearch",
-        "uid": "a38a46b4-a6aa-48ae-98e2-ed05c966be25"
+        "type": "grafana-opensearch-datasource",
+        "uid": "RUCIO_EVENTS_UID"
       },
       "fieldConfig": {
         "defaults": {
@@ -2157,6 +2160,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -2170,6 +2174,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineStyle": {
               "fill": "solid"
@@ -2210,7 +2215,7 @@
         "h": 10,
         "w": 24,
         "x": 0,
-        "y": 55
+        "y": 53
       },
       "id": 6,
       "options": {
@@ -2225,6 +2230,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -2257,8 +2263,8 @@
             }
           ],
           "datasource": {
-            "type": "elasticsearch",
-            "uid": "a38a46b4-a6aa-48ae-98e2-ed05c966be25"
+            "type": "OpenSearch",
+            "uid": "RUCIO_EVENTS_UID"
           },
           "metrics": [
             {
@@ -2267,7 +2273,7 @@
               "type": "sum"
             }
           ],
-          "query": "payload.vo:${vo:lucene} AND event_type:transfer-done AND payload.dst-rse:${dst_rse:lucene} AND payload.src-rse:${src_rse:lucene} AND payload.protocol:${protocol:lucene} and payload.transfer-endpoint:${fts:lucene}",
+          "query": "event_type:transfer-done AND payload.vo:${vo:lucene} AND payload.dst-rse:${dst_rse:lucene} AND payload.src-rse:${src_rse:lucene} AND payload.protocol:${protocol:lucene} AND payload.transfer-endpoint:${fts:lucene}",
           "refId": "A",
           "timeField": "created_at"
         }
@@ -2277,7 +2283,7 @@
     }
   ],
   "refresh": "1m",
-  "schemaVersion": 37,
+  "schemaVersion": 38,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -2293,8 +2299,8 @@
           ]
         },
         "datasource": {
-          "type": "elasticsearch",
-          "uid": "a38a46b4-a6aa-48ae-98e2-ed05c966be25"
+          "type": "OpenSearch",
+          "uid": "RUCIO_EVENTS_UID"
         },
         "definition": "{\"find\": \"terms\", \"field\": \"payload.transfer-endpoint\"}",
         "hide": 0,
@@ -2321,8 +2327,8 @@
           ]
         },
         "datasource": {
-          "type": "elasticsearch",
-          "uid": "a38a46b4-a6aa-48ae-98e2-ed05c966be25"
+          "type": "OpenSearch",
+          "uid": "RUCIO_EVENTS_UID"
         },
         "definition": "{\"find\":  \"terms\", \"field\": \"payload.dst-rse\"} ",
         "hide": 0,
@@ -2349,8 +2355,8 @@
           ]
         },
         "datasource": {
-          "type": "elasticsearch",
-          "uid": "a38a46b4-a6aa-48ae-98e2-ed05c966be25"
+          "type": "OpenSearch",
+          "uid": "RUCIO_EVENTS_UID"
         },
         "definition": "{\"find\":  \"terms\", \"field\": \"payload.src-rse\"} ",
         "hide": 0,
@@ -2369,21 +2375,21 @@
       {
         "current": {
           "selected": false,
-          "text": "payload.src-rse",
-          "value": "payload.src-rse"
+          "text": "event_type",
+          "value": "event_type"
         },
         "datasource": {
-          "type": "elasticsearch",
-          "uid": "a38a46b4-a6aa-48ae-98e2-ed05c966be25"
+          "type": "OpenSearch",
+          "uid": "RUCIO_EVENTS_UID"
         },
-        "definition": "{\"find\": \"fields\", \"type\": \"keywords\"}",
+        "definition": "{\"find\": \"fields\", \"type\": \"keyword\"}",
         "hide": 0,
         "includeAll": false,
         "label": "Group By",
         "multi": false,
         "name": "group_by",
         "options": [],
-        "query": "{\"find\": \"fields\", \"type\": \"keywords\"}",
+        "query": "{\"find\": \"fields\", \"type\": \"keyword\"}",
         "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
@@ -2401,8 +2407,8 @@
           ]
         },
         "datasource": {
-          "type": "elasticsearch",
-          "uid": "a38a46b4-a6aa-48ae-98e2-ed05c966be25"
+          "type": "OpenSearch",
+          "uid": "RUCIO_EVENTS_UID"
         },
         "definition": "{\"find\": \"terms\", \"field\": \"payload.vo\"}",
         "hide": 0,
@@ -2429,8 +2435,8 @@
           ]
         },
         "datasource": {
-          "type": "elasticsearch",
-          "uid": "a38a46b4-a6aa-48ae-98e2-ed05c966be25"
+          "type": "OpenSearch",
+          "uid": "RUCIO_EVENTS_UID"
         },
         "definition": "{\"find\": \"terms\", \"field\": \"payload.protocol\"}",
         "hide": 0,
@@ -2448,8 +2454,8 @@
       },
       {
         "datasource": {
-          "type": "elasticsearch",
-          "uid": "a38a46b4-a6aa-48ae-98e2-ed05c966be25"
+          "type": "OpenSearch",
+          "uid": "RUCIO_EVENTS_UID"
         },
         "filters": [],
         "hide": 0,
@@ -2460,7 +2466,7 @@
       },
       {
         "auto": true,
-        "auto_count": 30,
+        "auto_count": 20,
         "auto_min": "10s",
         "current": {
           "selected": false,
@@ -2544,8 +2550,8 @@
           ]
         },
         "datasource": {
-          "type": "elasticsearch",
-          "uid": "a38a46b4-a6aa-48ae-98e2-ed05c966be25"
+          "type": "OpenSearch",
+          "uid": "RUCIO_EVENTS_UID"
         },
         "definition": "{\"find\": \"terms\", \"field\": \"payload.rse\"}",
         "hide": 0,
@@ -2567,10 +2573,10 @@
     "from": "now-2d",
     "to": "now"
   },
-  "timepicker": {},
+  "timepicker": {
+    "nowDelay": "0m"
+  },
   "timezone": "",
   "title": "Rucio External",
-  "uid": "YVcucApIk",
-  "version": 32,
   "weekStart": ""
 }
