@@ -140,7 +140,7 @@
           },
           "editorMode": "builder",
           "expr": "sum by(state) (increase(rucio_transfertool_fts3_submission_total{state=\"success\"}[$bin]))",
-          "hide": false,
+          "hide": true,
           "interval": "24h",
           "legendFormat": "__auto",
           "range": true,
@@ -151,13 +151,24 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "editorMode": "builder",
+          "editorMode": "code",
           "expr": "sum(increase(rucio_transfertool_fts3_submission_total[$bin]))",
-          "hide": false,
+          "hide": true,
           "interval": "24h",
           "legendFormat": "Total",
           "range": true,
           "refId": "B"
+        },
+        {
+          "datasource": {
+            "name": "Expression",
+            "type": "__expr__",
+            "uid": "__expr__"
+          },
+          "expression": "($A / $B) * 100",
+          "hide": false,
+          "refId": "C",
+          "type": "math"
         }
       ],
       "title": "[Transfer Submission] Percentage Success in last 24h",
@@ -176,7 +187,7 @@
             "reduce": {
               "reducer": "sum"
             },
-            "replaceFields": false
+            "replaceFields": true
           }
         },
         {
@@ -400,7 +411,7 @@
           "refId": "A"
         }
       ],
-      "title": "[Core] Rule Update per minure in the last 24h",
+      "title": "[Core] Rule Update per minute in the last 24h",
       "transparent": true,
       "type": "bargauge"
     },
@@ -1009,8 +1020,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "dark-green",
-                "value": null
+                "color": "dark-green"
               }
             ]
           }
@@ -1100,8 +1110,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "dark-green",
-                "value": null
+                "color": "dark-green"
               }
             ]
           },
@@ -1211,8 +1220,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1331,8 +1339,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1496,5 +1503,8 @@
     ]
   },
   "timezone": "browser",
-  "title": "Rucio Overview"
+  "title": "Rucio Internal",
+  "uid": "000000003",
+  "version": 14,
+  "weekStart": "monday"
 }

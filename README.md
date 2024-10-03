@@ -12,8 +12,7 @@ Current contents include two types of monitoring in addition to the prometheus /
 -    Event monitoring from Hermes daemon
 -    Database monitoring using Logstash and database queries.
 
-To get these two types of monitoring this repository includes:
-
-- Helm charts to deploy OpenSearch, the instructions to connect the components, and the dashboard to deploy on grafana to visualise the data from Rucio.
-- Helm charts to deploy ElasticSearch, the instructions to connect the components, and the dashboard to deploy on grafana to visualise the data from Rucio.
+To get these three types of monitoring this repository includes:
+- Prometheus monitoring dashboards
+- Helm charts to deploy OpenSearch / ElasticSearch, the instructions to connect the components, and the dashboard to deploy on grafana to visualise the data from Rucio.
 - Helm charts to deploy Logstash, the instructions to connect the components and dashboards to deploy to OpenSearch and ElasticSearch
