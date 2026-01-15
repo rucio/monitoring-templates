@@ -39,11 +39,11 @@
       }
     ]
   },
-  "description": "",
   "editable": true,
+  "description": "",
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1,
+  "id": null,
   "interval": "$bin",
   "links": [],
   "liveNow": false,
@@ -1256,7 +1256,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "sum(increase(rest_client_requests_total[$bin]))",
+          "expr": "sum(increase(rucio_core_request_get_and_mark_next_count[$bin]))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "legendFormat": "{{label_name}}",
@@ -1826,7 +1826,6 @@
   },
   "timezone": "browser",
   "title": "Rucio Internal Services",
-  "uid": "null",
   "version": 16,
   "weekStart": "monday"
  }
